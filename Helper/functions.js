@@ -30,10 +30,6 @@ const getChat = async (text) => {
     });
     
 response = requests.post("https://api.openai.com/v1/engines/davinci/jobs", headers=headers, data=json.dumps(data))
-
-    if response.status_code == 200:
-
-        result = response.json()
     
     return response.data.choices[0].text;
   } catch (error) {
