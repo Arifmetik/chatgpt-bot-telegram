@@ -28,9 +28,12 @@ const getChat = async (text) => {
       temperature: 0.5,
       max_tokens: 1000,
     });
-    
-response = requests.post("https://api.openai.com/v1/engines/davinci/jobs", headers=headers, data=json.dumps(data))
-    
+     while True:
+    message = input("You: ")
+    prompt = f"{previous_message} {message}"
+    generated_response = generate_response(prompt)
+    previous_message = generated_response
+    print("Bot: " + generated_response)  
     return response.data.choices[0].text;
   } catch (error) {
     console.log(error);
