@@ -28,7 +28,6 @@ const getChat = async (text) => {
       temperature: 0.5,
       max_tokens: 1000,
     });
-     while True:
     message = input("You: ")
     prompt = f"{previous_message} {message}"
     generated_response = generate_response(prompt)
