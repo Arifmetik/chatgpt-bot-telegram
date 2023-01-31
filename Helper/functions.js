@@ -23,16 +23,12 @@ const getImage = async (text) => {
 const getChat = async (text) => {
   try {
     const response = await openai.createCompletion({
-      model: "text-davinci-002",
+      model: "text-davinci-003",
       prompt: text,
       temperature: 0.5,
       max_tokens: 1000,
     });
-    message = input("You: ")
-    prompt = f"{previous_message} {message}"
-    generated_response = generate_response(prompt)
-    previous_message = generated_response
-    print("Bot: " + generated_response)  
+      
     return response.data.choices[0].text;
   } catch (error) {
     console.log(error);
