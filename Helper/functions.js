@@ -25,10 +25,16 @@ const getChat = async (text) => {
     const response = await openai.createCompletion({
       model: "text-davinci-002",
       prompt: text,
-      temperature: 0,
+      temperature: 0.5,
       max_tokens: 1000,
     });
+    
+response = requests.post("https://api.openai.com/v1/engines/davinci/jobs", headers=headers, data=json.dumps(data))
 
+    if response.status_code == 200:
+
+        result = response.json()
+    
     return response.data.choices[0].text;
   } catch (error) {
     console.log(error);
