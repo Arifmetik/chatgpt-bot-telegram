@@ -52,6 +52,22 @@ bot.command("image", async (ctx) => {
 bot.command("ask", async (ctx) => {
   const text = ctx.message.text?.replace("/ask", "")?.trim().toLowerCase();
 
+const translateButton = document.getElementById('translate-button');
+const textToTranslate = document.getElementById('text-to-translate');
+const translatedText = document.getElementById('translated-text');
+
+translateButton.addEventListener('click', function() {
+  const text = textToTranslate.innerHTML;
+  const targetLanguage = 'uz';
+  
+  fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLanguage}&dt=t&q=${encodeURI(text)}`)
+    .then(response => response.json())
+    .then(data => {
+      translatedText.innerHTML = data[0][0][0];
+    })
+    .catch(error => console.error(error));
+});
+
   if (text) {
     ctx.sendChatAction("typing");
     const res = await getChat(text);
