@@ -2,7 +2,7 @@ require('dotenv').config()
 const { Configuration, OpenAIApi } = require("openai");
 const { getImage, getChat } = require("./Helper/functions");
 const { Telegraf } = require("telegraf");
-const translate = require('translate-text-with-language');
+const translate = require('translate');
 
 const configuration = new Configuration({
   apiKey: process.env.API,
@@ -11,7 +11,7 @@ const openai = new OpenAIApi(configuration);
 module.exports = openai;
 
 const bot = new Telegraf(process.env.TG_API);
-bot.start((ctx) => ctx.reply("Welcome , You can ask anything from me"));
+bot.start((ctx) => ctx.reply("Salom , menga xohlagan savolingizni bering"));
 
 bot.help((ctx) => {
   ctx.reply(
