@@ -2,27 +2,22 @@ require('dotenv').config()
 const { Configuration, OpenAIApi } = require("openai");
 const { getImage, getChat } = require("./Helper/functions");
 const { Telegraf } = require("telegraf");
-const { Translate } = require('@google-cloud/translate').v2;
-
-const translateClient = new Translate({
-  projectId: process.env.GOOGLE_PROJECT_ID,
-  key: process.env.GOOGLE_API_KEY,
-});
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.API,
 });
 const openai = new OpenAIApi(configuration);
 module.exports = openai;
 
-const bot = new Telegraf(process.env.TG_API_KEY);
-bot.start((ctx) => ctx.reply("Salom , menga xohlagan savolingizni bering"));
+const bot = new Telegraf(process.env.TG_API);
+bot.start((ctx) => ctx.reply("Welcome , You can ask anything from me"));
 
 bot.help((ctx) => {
   ctx.reply(
-    "This bot can perform the following command \n /image -> to create image from text \n /ask -> ask anything from me "
+    "This bot can perform the following command \n /image -> to create image from text \n /ask -> ank anything from me "
   );
 });
+
 
 
 // Image command
@@ -35,6 +30,8 @@ bot.command("image", async (ctx) => {
 
     if (res) {
       ctx.sendChatAction("upload_photo");
+      // ctx.sendPhoto(res);
+      // ctx.telegram.sendPhoto()
       ctx.telegram.sendPhoto(ctx.message.chat.id, res, {
         reply_to_message_id: ctx.message.message_id,
       });
@@ -51,17 +48,48 @@ bot.command("image", async (ctx) => {
 });
 
 // Chat command
+
 bot.command("ask", async (ctx) => {
   const text = ctx.message.text?.replace("/ask", "")?.trim().toLowerCase();
+
+const axios = require("axios");
+
+async function translateText(text, targetLanguage = "uz") {
+  const encodedText = encodeURI(text);
+  const response = await axios.get(
+    https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLanguage}&dt=t&q=${encodedText}
+  );
+
+  return response.data[0][0][0];
+}
+
+// Example usage
+async function handleTranslation(ctx) {
+  const text = ctx.message.text?.replace("/translate", "")?.trim().toLowerCase();
+  if (text) {
+    const translatedText = await translateText(text);
+    ctx.telegram.sendMessage(ctx.message.chat.id, translatedText, {
+      reply_to_message_id: ctx.message.message_id,
+    });
+  } else {
+    ctx.telegram.sendMessage(
+      ctx.message.chat.id,
+      "Please provide text to translate after /translate",
+      {
+        reply_to_message_id: ctx.message.message_id,
+      }
+    );
+  }
+}
+
+bot.command("translate", handleTranslation);
+
 
   if (text) {
     ctx.sendChatAction("typing");
     const res = await getChat(text);
-
     if (res) {
-      // Translate the response to Uzbek
-      const [translation] = await translateClient.translate(res, 'uz');
-      ctx.telegram.sendMessage(ctx.message.chat.id, translation, {
+      ctx.telegram.sendMessage(ctx.message.chat.id, res, {
         reply_to_message_id: ctx.message.message_id,
       });
     }
@@ -73,7 +101,11 @@ bot.command("ask", async (ctx) => {
         reply_to_message_id: ctx.message.message_id,
       }
     );
+  
+    //  reply("Please ask anything after /ask");
   }
 });
+
+
 
 bot.launch();
