@@ -2,6 +2,7 @@ require('dotenv').config()
 const { Configuration, OpenAIApi } = require("openai");
 const { getImage, getChat } = require("./Helper/functions");
 const { Telegraf } = require("telegraf");
+const translate = require('translate-text-with-language');
 
 const configuration = new Configuration({
   apiKey: process.env.API,
@@ -14,7 +15,7 @@ bot.start((ctx) => ctx.reply("Welcome , You can ask anything from me"));
 
 bot.help((ctx) => {
   ctx.reply(
-    "This bot can perform the following command \n /image -> to create image from text \n /ask -> ank anything from me "
+    "This bot can perform the following command \n /image -> to create image from text \n /ask -> ask anything from me "
   );
 });
 
@@ -55,10 +56,13 @@ bot.command("ask", async (ctx) => {
   if (text) {
     ctx.sendChatAction("typing");
     const res = await getChat(text);
+
     if (res) {
-      const translatedText = await translateText(res);
-      ctx.telegram.sendMessage(ctx.message.chat.id, translatedText, {
-        reply_to_message_id: ctx.message.message_id,
+      // Translate the response to Uzbek
+      translate(res, 'uz').then(translated => {
+        ctx.telegram.sendMessage(ctx.message.chat.id, translated.text, {
+          reply_to_message_id: ctx.message.message_id,
+        });
       });
     }
   } else {
@@ -71,3 +75,6 @@ bot.command("ask", async (ctx) => {
     );
   }
 });
+
+
+bot.launch();
