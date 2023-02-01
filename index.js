@@ -52,44 +52,12 @@ bot.command("image", async (ctx) => {
 bot.command("ask", async (ctx) => {
   const text = ctx.message.text?.replace("/ask", "")?.trim().toLowerCase();
 
-const axios = require("axios");
-
-async function translateText(text, targetLanguage = "uz") {
-  const encodedText = encodeURI(text);
-  const response = await axios.get(
-    `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLanguage}&dt=t&q=${encodedText}`
-  );
-
-  return response.data[0][0][0];
-}
-
-// Example usage
-async function handleTranslation(ctx) {
-  const text = ctx.message.text?.replace("/translate", "")?.trim().toLowerCase();
-  if (text) {
-    const translatedText = await translateText(text);
-    ctx.telegram.sendMessage(ctx.message.chat.id, translatedText, {
-      reply_to_message_id: ctx.message.message_id,
-    });
-  } else {
-    ctx.telegram.sendMessage(
-      ctx.message.chat.id,
-      "Please provide text to translate after /translate",
-      {
-        reply_to_message_id: ctx.message.message_id,
-      }
-    );
-  }
-}
-
-bot.command("translate", handleTranslation);
-
-
   if (text) {
     ctx.sendChatAction("typing");
     const res = await getChat(text);
     if (res) {
-      ctx.telegram.sendMessage(ctx.message.chat.id, res, {
+      const translatedText = await translateText(res);
+      ctx.telegram.sendMessage(ctx.message.chat.id, translatedText, {
         reply_to_message_id: ctx.message.message_id,
       });
     }
@@ -101,11 +69,5 @@ bot.command("translate", handleTranslation);
         reply_to_message_id: ctx.message.message_id,
       }
     );
-  
-    //  reply("Please ask anything after /ask");
   }
 });
-
-
-
-bot.launch();
