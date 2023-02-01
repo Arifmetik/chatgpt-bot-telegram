@@ -52,21 +52,38 @@ bot.command("image", async (ctx) => {
 bot.command("ask", async (ctx) => {
   const text = ctx.message.text?.replace("/ask", "")?.trim().toLowerCase();
 
-const translateButton = document.getElementById('translate-button');
-const textToTranslate = document.getElementById('text-to-translate');
-const translatedText = document.getElementById('translated-text');
+const axios = require("axios");
 
-translateButton.addEventListener('click', function() {
-  const text = textToTranslate.innerHTML;
-  const targetLanguage = 'uz';
-  
-  fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLanguage}&dt=t&q=${encodeURI(text)}`)
-    .then(response => response.json())
-    .then(data => {
-      translatedText.innerHTML = data[0][0][0];
-    })
-    .catch(error => console.error(error));
-});
+async function translateText(text, targetLanguage = "uz") {
+  const encodedText = encodeURI(text);
+  const response = await axios.get(
+    `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLanguage}&dt=t&q=${encodedText}`
+  );
+
+  return response.data[0][0][0];
+}
+
+// Example usage
+async function handleTranslation(ctx) {
+  const text = ctx.message.text?.replace("/translate", "")?.trim().toLowerCase();
+  if (text) {
+    const translatedText = await translateText(text);
+    ctx.telegram.sendMessage(ctx.message.chat.id, translatedText, {
+      reply_to_message_id: ctx.message.message_id,
+    });
+  } else {
+    ctx.telegram.sendMessage(
+      ctx.message.chat.id,
+      "Please provide text to translate after /translate",
+      {
+        reply_to_message_id: ctx.message.message_id,
+      }
+    );
+  }
+}
+
+bot.command("translate", handleTranslation);
+
 
   if (text) {
     ctx.sendChatAction("typing");
