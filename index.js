@@ -30,36 +30,6 @@ bot.command("ask", async (ctx) => {
 
 const axios = require("axios");
 
-async function translateText(text, targetLanguage = "uz") {
-  const encodedText = encodeURI(text);
-  const response = await axios.get(
-    https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLanguage}&dt=t&q=${encodedText}
-  );
-
-  return response.data[0][0][0];
-}
-
-// Example usage
-async function handleTranslation(ctx) {
-  const text = ctx.message.text?.replace("/translate", "")?.trim().toLowerCase();
-  if (text) {
-    const translatedText = await translateText(text);
-    ctx.telegram.sendMessage(ctx.message.chat.id, translatedText, {
-      reply_to_message_id: ctx.message.message_id,
-    });
-  } else {
-    ctx.telegram.sendMessage(
-      ctx.message.chat.id,
-      "Please provide text to translate after /translate",
-      {
-        reply_to_message_id: ctx.message.message_id,
-      }
-    );
-  }
-}
-
-bot.command("translate", handleTranslation);
-
 
   if (text) {
     ctx.sendChatAction("typing");
