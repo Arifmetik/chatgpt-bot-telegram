@@ -24,15 +24,22 @@ const translate = require('translate-google');
 
 bot.command('eng_uz', async ctx => {
   const text = ctx.message.text.split(' ').slice(1).join(' ');
-  const translation = await translate(text, { to: 'uz' });
-  ctx.reply(translation);
+  try {
+    const translation = await translate(text, { to: 'uz' });
+    ctx.reply(translation);
+  } catch (error) {
+    ctx.reply('Try again');
+  }
 });
 
 bot.command('uz_eng', async ctx => {
   const text = ctx.message.text.split(' ').slice(1).join(' ');
-  const translation = await translate(text, { to: 'en' });
-  ctx.reply(translation);
-});
+  try {
+    const translation = await translate(text, { to: 'en' });
+    ctx.reply(translation);
+  } catch (error) {
+    ctx.reply('Try again');
+  }
 
 
 
