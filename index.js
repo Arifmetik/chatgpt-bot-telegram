@@ -20,7 +20,6 @@ bot.help((ctx) => {
 
 //Test translate
 const { translate } = require('@google-cloud/translate').v2;
-const axios = require("axios");
 
 // Your Google Cloud API Key
 const { Translate } = require('@google-cloud/translate').v2;
