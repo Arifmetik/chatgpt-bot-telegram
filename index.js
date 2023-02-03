@@ -18,6 +18,22 @@ bot.help((ctx) => {
   );
 });
 
+//Test translate
+const { Telegraf } = require('telegraf');
+const translate = require('translate-google');
+
+
+bot.command('eng_uz', async ctx => {
+  const text = ctx.message.text.split(' ').slice(1).join(' ');
+  const translation = await translate(text, { to: 'uz' });
+  ctx.reply(translation);
+});
+
+bot.command('uz_eng', async ctx => {
+  const text = ctx.message.text.split(' ').slice(1).join(' ');
+  const translation = await translate(text, { to: 'en' });
+  ctx.reply(translation);
+});
 
 
 
