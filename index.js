@@ -20,20 +20,34 @@ bot.help((ctx) => {
 
 //Translate uzbek-english command
 
-const axios = require('axios');
+const axios = require("axios");
 
-const translate = async (text, sourceLang, targetLang) => {
-  const encodedText = encodeURIComponent(text);
-  const url = `https://translate.google.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodedText}`;
+async function /uz_eng(text) {
+  try {
+    const response = await axios.get(`https://translate.google.com/#view=home&op=translate&sl=uz&tl=en&text=${text}`);
+    // Extract the translation from the response using a library like cheerio
+    const $ = require("cheerio").load(response.data);
+    const translatedText = $("#result_box span").text();
+    return translatedText;
+  } catch (error) {
+    console.error(error);
+    return "Could not translate text at this time.";
+  }
+}
 
-  const response = await axios.get(url);
-  const [translatedText] = response.data.sentences.map(sentence => sentence.trans);
+async function /eng_uz(text) {
+  try {
+    const response = await axios.get(`https://translate.google.com/#view=home&op=translate&sl=en&tl=uz&text=${text}`);
+    // Extract the translation from the response using a library like cheerio
+    const $ = require("cheerio").load(response.data);
+    const translatedText = $("#result_box span").text();
+    return translatedText;
+  } catch (error) {
+    console.error(error);
+    return "Could not translate text at this time.";
+  }
+}
 
-  return translatedText;
-};
-
-const translateUzbekToEnglish = async text => translate(text, 'uz', 'en');
-const translateEnglishToUzbek = async text => translate(text, 'en', 'uz');
 
 
 
