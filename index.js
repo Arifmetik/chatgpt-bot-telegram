@@ -22,7 +22,7 @@ bot.help((ctx) => {
 
 const axios = require("axios");
 
-async function /uz_eng(text) {
+async function translateUzbekToEnglish(text) {
   try {
     const response = await axios.get(`https://translate.google.com/#view=home&op=translate&sl=uz&tl=en&text=${text}`);
     // Extract the translation from the response using a library like cheerio
@@ -35,7 +35,7 @@ async function /uz_eng(text) {
   }
 }
 
-async function /eng_uz(text) {
+async function translateEnglishToUzbek(text) {
   try {
     const response = await axios.get(`https://translate.google.com/#view=home&op=translate&sl=en&tl=uz&text=${text}`);
     // Extract the translation from the response using a library like cheerio
