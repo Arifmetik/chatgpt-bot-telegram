@@ -18,58 +18,7 @@ bot.help((ctx) => {
   );
 });
 
-//Translate uzbek-english command
 
-const axios = require("axios");
-
-async function translateUzbekToEnglish(text) {
-  try {
-    const response = await axios.get(`https://translate.google.com/#view=home&op=translate&sl=uz&tl=en&text=${text}`);
-    // Extract the translation from the response using a library like cheerio
-    const $ = require("cheerio").load(response.data);
-    const translatedText = $("#result_box span").text();
-    return translatedText;
-  } catch (error) {
-    console.error(error);
-    return "Could not translate text at this time.";
-  }
-}
-
-async function translateEnglishToUzbek(text) {
-  try {
-    const response = await axios.get(`https://translate.google.com/#view=home&op=translate&sl=en&tl=uz&text=${text}`);
-    // Extract the translation from the response using a library like cheerio
-    const $ = require("cheerio").load(response.data);
-    const translatedText = $("#result_box span").text();
-    return translatedText;
-  } catch (error) {
-    console.error(error);
-    return "Could not translate text at this time.";
-  }
-}
-
-
-bot.command("tr_uz", async (ctx) => {
-  const text = ctx.message.text?.replace("/tr_uz", "")?.trim().toLowerCase();
-  if (text) {
-    ctx.sendChatAction("typing");
-    const translatedText = await translateEnglishToUzbek(text);
-    ctx.telegram.sendMessage(ctx.message.chat.id, translatedText, {
-      reply_to_message_id: ctx.message.message_id,
-    });
-  } else {
-    ctx.telegram.sendMessage(
-      ctx.message.chat.id,
-      "Please enter text to translate after /tr_uz",
-      {
-        reply_to_message_id: ctx.message.message_id,
-      }
-    );
-  }
-});
-
-bot.command("tr_eng", async (ctx) => {
-  const text = ctx
 
 
 // Chat command
