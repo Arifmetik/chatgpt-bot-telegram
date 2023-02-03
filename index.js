@@ -14,7 +14,7 @@ bot.start((ctx) => ctx.reply("Welcome , You can ask anything from me"));
 
 bot.help((ctx) => {
   ctx.reply(
-    "This bot can perform the following command \n /image -> to create image from text \n /ask -> ank anything from me "
+    " \n /ask -> ank anything from me "
   );
 });
 
