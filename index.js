@@ -20,32 +20,8 @@ bot.help((ctx) => {
 
 
 
-// Image command
-bot.command("image", async (ctx) => {
-  const text = ctx.message.text?.replace("/image", "")?.trim().toLowerCase();
 
-  if (text) {
-   
-    const res = await getImage(text);
 
-    if (res) {
-      ctx.sendChatAction("upload_photo");
-      // ctx.sendPhoto(res);
-      // ctx.telegram.sendPhoto()
-      ctx.telegram.sendPhoto(ctx.message.chat.id, res, {
-        reply_to_message_id: ctx.message.message_id,
-      });
-    }
-  } else {
-    ctx.telegram.sendMessage(
-      ctx.message.chat.id,
-      "You have to give some description after /image",
-      {
-        reply_to_message_id: ctx.message.message_id,
-      }
-    );
-  }
-});
 
 // Chat command
 
