@@ -19,28 +19,58 @@ bot.help((ctx) => {
 });
 
 //Test translate
-const translate = require('translate-google');
+const { translate } = require('@google-cloud/translate').v2;
+const axios = require("axios");
 
+// Your Google Cloud API Key
+const googleTranslateApiKey = process.env.GOOGLE_API;
 
-bot.command('eng_uz', async ctx => {
-  const text = ctx.message.text.split(' ').slice(1).join(' ');
-  try {
-    const translation = await translate(text, { to: 'uz' });
-    ctx.reply(translation);
-  } catch (error) {
-    ctx.reply('Try again');
+// Initialize the translate API client
+const translateClient = new translate({
+  key: googleTranslateApiKey,
+});
+
+// Function to translate text from source to target language
+const translateText = async (text, target) => {
+  // Detect the source language
+  const [detection] = await translateClient.detect(text);
+  const source = detection.language;
+
+  // Translate the text to target language
+  const [translation] = await translateClient.translate(text, target);
+  return { source, target, translation };
+};
+
+// Command to handle user messages
+bot.command("ask", async (ctx) => {
+  const text = ctx.message.text?.replace("/ask", "")?.trim();
+  if (!text) {
+    ctx.telegram.sendMessage(
+      ctx.message.chat.id,
+      "Please ask anything after /ask",
+      {
+        reply_to_message_id: ctx.message.message_id,
+      }
+    );
+  } else {
+    ctx.sendChatAction("typing");
+
+    // Translate the user's message to English
+    const { source, target, translation: translatedText } = await translateText(text, 'en');
+
+    // Get the response from OpenAI API in English
+    const res = await getChat(translatedText);
+
+    // Translate the response back to the user's language
+    const { translation: translatedResponse } = await translateText(res, source);
+
+    // Send the response to the user
+    ctx.telegram.sendMessage(ctx.message.chat.id, translatedResponse, {
+      reply_to_message_id: ctx.message.message_id,
+    });
   }
 });
 
-bot.command('uz_eng', async ctx => {
-  const text = ctx.message.text.split(' ').slice(1).join(' ');
-  try {
-    const translation = await translate(text, { to: 'en' });
-    ctx.reply(translation);
-  } catch (error) {
-    ctx.reply('Try again');
-  }
-  });
 
 
 // Chat command
