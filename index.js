@@ -23,12 +23,17 @@ const { translate } = require('@google-cloud/translate').v2;
 const axios = require("axios");
 
 // Your Google Cloud API Key
+const { Translate } = require('@google-cloud/translate').v2;
+const axios = require("axios");
+
+// Your Google Cloud API Key
 const googleTranslateApiKey = process.env.GOOGLE_API;
 
 // Initialize the translate API client
-const translateClient = new translate({
+const translateClient = new Translate({
   key: googleTranslateApiKey,
 });
+
 
 // Function to translate text from source to target language
 const translateText = async (text, target) => {
