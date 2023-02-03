@@ -19,7 +19,6 @@ bot.help((ctx) => {
 });
 
 //Test translate
-const { Telegraf } = require('telegraf');
 const translate = require('translate-google');
 
 
