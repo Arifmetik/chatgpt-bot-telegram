@@ -40,7 +40,7 @@ bot.command('uz_eng', async ctx => {
   } catch (error) {
     ctx.reply('Try again');
   }
-
+  });
 
 
 // Chat command
