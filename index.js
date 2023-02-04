@@ -43,6 +43,23 @@ bot.command('uz_eng', async ctx => {
   });
 
 
+// Post stats
+
+const Telegraf = require('telegraf');
+const bot = new Telegraf(process.env.BOT_TOKEN);
+
+bot.command('posts', (ctx) => {
+  const chatId = ctx.chat.id;
+  // Get the total number of messages in the group
+  ctx.telegram.getChatHistory(chatId, 0, 0, 100).then((messages) => {
+    const totalPosts = messages.length;
+    ctx.reply(`The total number of posts in this group is ${totalPosts}`);
+  });
+});
+
+bot.launch();
+
+
 // Chat command
 
 bot.command("ask", async (ctx) => {
