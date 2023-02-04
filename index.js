@@ -49,13 +49,12 @@ bot.command('chats', (ctx) => {
   const chatId = ctx.chat.id;
   // Get information about the group
   ctx.telegram.getChat(chatId).then((group) => {
-    const totalChats = group.message_count;
+    const totalChats = group.message_count || 0;
     ctx.reply(`The total number of chats in this group is ${totalChats}`);
   }).catch((error) => {
     ctx.reply('Error retrieving group information');
   });
 });
-
 
 
 
