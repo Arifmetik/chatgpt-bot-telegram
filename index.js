@@ -45,14 +45,19 @@ bot.command('uz_eng', async ctx => {
 
 // Post stats
 
-bot.command('chats', (ctx) => {
-  const chatId = ctx.chat.id;
-  // Get information about the group
-  ctx.telegram.getChat(chatId).then((group) => {
-    const totalChats = group.message_count || 0;
-    ctx.reply(`The total number of chats in this group is ${totalChats}`);
+bot.command('store', (ctx) => {
+  const data = ctx.message.text.split(' ').slice(1).join(' ');
+  const chatId = process.env.DATABASE_CHAT_ID; // the chat ID of the private channel
+  ctx.telegram.sendMessage(chatId, data);
+});
+
+bot.command('retrieve', (ctx) => {
+  const chatId = process.env.DATABASE_CHAT_ID; // the chat ID of the private channel
+  ctx.telegram.getHistory(chatId, 0, 0, 100).then((messages) => {
+    const data = messages.map((message) => message.text).join('\n');
+    ctx.reply(data);
   }).catch((error) => {
-    ctx.reply('Error retrieving group information');
+    ctx.reply('Error retrieving data from the database');
   });
 });
 
