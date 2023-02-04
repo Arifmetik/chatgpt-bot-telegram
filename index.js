@@ -1,4 +1,5 @@
-const Telegraf = require('telegraf')
+const Telegraf = require("telegraf");
+
 const { MongoClient } = require('mongodb')
 const bot = new Telegraf(process.env.TG_API)
 
