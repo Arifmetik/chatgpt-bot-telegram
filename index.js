@@ -1,10 +1,10 @@
+require('dotenv').config()
 const { MongoClient } = require('mongodb')
 const mongoClient = require("mongodb").MongoClient;
 const uri = process.env.MONGODB_URI;
 const botOwnerId = process.env.BOT_OWNER_ID;
 
 
-require('dotenv').config()
 const { Configuration, OpenAIApi } = require("openai");
 const { getImage, getChat } = require("./Helper/functions");
 const { Telegraf } = require("telegraf");
