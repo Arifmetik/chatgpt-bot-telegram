@@ -44,11 +44,8 @@ bot.command('uz_eng', async ctx => {
 
 
 // Test commands
-const TelegramBot = require('node-telegram-bot-api');
 const MongoClient = require('mongodb').MongoClient;
-const token = process.env.TELEGRAM_BOT_TOKEN;
 const mongodb_uri = process.env.MONGODB_URI;
-const bot = new TelegramBot(token, {polling: true});
 
 bot.onText(/\/connectdb/, (msg, match) => {
   const chatId = msg.chat.id;
