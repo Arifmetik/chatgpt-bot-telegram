@@ -47,12 +47,15 @@ bot.command('uz_eng', async ctx => {
 
 bot.command('posts', (ctx) => {
   const chatId = ctx.chat.id;
-  // Get the total number of messages in the group
-  ctx.telegram.getChatHistory(chatId, 0, 0, 100).then((messages) => {
-    const totalPosts = messages.length;
+  // Get information about the group
+  ctx.telegram.getChat(chatId).then((group) => {
+    const totalPosts = group.message_count;
     ctx.reply(`The total number of posts in this group is ${totalPosts}`);
+  }).catch((error) => {
+    ctx.reply('Error retrieving group information');
   });
 });
+
 
 
 // Chat command
