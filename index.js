@@ -1,6 +1,7 @@
 const { MongoClient } = require('mongodb')
 const mongoClient = require("mongodb").MongoClient;
 const uri = process.env.MONGODB_URI;
+const botOwnerId = process.env.BOT_OWNER_ID;
 
 
 require('dotenv').config()
