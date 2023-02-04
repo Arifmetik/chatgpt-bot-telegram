@@ -43,24 +43,6 @@ bot.command('uz_eng', async ctx => {
   });
 
 
-// Post stats
-
-bot.command('store', (ctx) => {
-  const data = ctx.message.text.split(' ').slice(1).join(' ');
-  const chatId = process.env.DATABASE_CHAT_ID; // the chat ID of the private channel
-  ctx.telegram.sendMessage(chatId, data);
-});
-
-bot.command('retrieve', (ctx) => {
-  const chatId = process.env.DATABASE_CHAT_ID; // the chat ID of the private channel
-  ctx.telegram.getHistory(chatId, 0, 0, 100).then((messages) => {
-    const data = messages.map((message) => message.text).join('\n');
-    ctx.reply(data);
-  }).catch((error) => {
-    ctx.reply('Error retrieving data from the database');
-  });
-});
-
 // Test commands
 const MongoClient = require('mongodb').MongoClient;
 const url = process.env.MONGO_DB_URL;
