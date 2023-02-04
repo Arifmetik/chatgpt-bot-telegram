@@ -17,6 +17,7 @@ module.exports = openai;
 const bot = new Telegraf(process.env.TG_API);
 bot.start((ctx) => ctx.reply("Welcome , You can ask anything from me"));
 
+if (connectionString && connectionString.startsWith('mongodb://')) {
 let db;
 
 MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, (error, client) => {
@@ -27,6 +28,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, (e
     db = client.db("telegram-bot-db");
   }
 });
+}
 
 bot.command("allow", (ctx) => {
   if (db) {
