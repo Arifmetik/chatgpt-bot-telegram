@@ -1,4 +1,8 @@
 const { MongoClient } = require('mongodb')
+const MongoClient = mongodb.MongoClient;
+const mongoClient = require("mongodb").MongoClient;
+const uri = process.env.MONGODB_URI;
+
 
 require('dotenv').config()
 const { Configuration, OpenAIApi } = require("openai");
