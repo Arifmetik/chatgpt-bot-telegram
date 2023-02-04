@@ -15,7 +15,7 @@ const openai = new OpenAIApi(configuration);
 module.exports = openai;
 
 const bot = new Telegraf(process.env.TG_API);
-bot.start((ctx) => ctx.reply("Welcome , You can ask anything from me"));
+bot.start((ctx) => ctx.reply("Welcome, you can ask anything from me."));
 
 if (uri && uri.startsWith('mongodb://')) {
   let db;
@@ -37,24 +37,16 @@ if (uri && uri.startsWith('mongodb://')) {
           if (error) {
             console.log("Error adding user to allowed_users collection:", error);
           } else {
-            ctx.reply(`User with ID ${userId} has been granted access to /ask command`);
+            ctx.reply(`User with ID ${userId} has been granted access to the /ask command.`);
           }
         });
       } else {
-        ctx.reply("You are not the bot owner");
+        ctx.reply("You are not the bot owner.");
       }
     } else {
-      ctx.reply("Error connecting to MongoDB, cannot perform this action");
+      ctx.reply("Error connecting to MongoDB, cannot perform this action.");
     }
   });
-
-bot.command("ask", (ctx) => {
-ctx.reply("The /ask command works!");
-});
-
-bot.command("allow", (ctx) => {
-ctx.reply("The /allow command works!");
-});
 
   bot.command("ask", (ctx) => {
     if (db) {
@@ -62,13 +54,13 @@ ctx.reply("The /allow command works!");
         if (error) {
           console.log("Error searching for user in allowed_users collection:", error);
         } else if (result) {
-          // logic for handling the /ask command
+          // Your logic for handling the /ask command goes here
         } else {
-          ctx.reply("You do not have permission to use the /ask command");
+          ctx.reply("You do not have permission to use the /ask command.");
         }
       });
     } else {
-      ctx.reply("Error connecting to MongoDB, cannot perform this action");
+      ctx.reply("Error connecting to MongoDB, cannot perform this action.");
     }
   });
 }
