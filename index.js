@@ -45,8 +45,6 @@ bot.command('uz_eng', async ctx => {
 
 // Post stats
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
-
 bot.command('posts', (ctx) => {
   const chatId = ctx.chat.id;
   // Get the total number of messages in the group
@@ -55,8 +53,6 @@ bot.command('posts', (ctx) => {
     ctx.reply(`The total number of posts in this group is ${totalPosts}`);
   });
 });
-
-bot.launch();
 
 
 // Chat command
