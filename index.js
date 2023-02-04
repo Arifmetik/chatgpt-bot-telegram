@@ -44,21 +44,14 @@ bot.command('uz_eng', async ctx => {
 
 
 // Test commands
-const MongoClient = require('mongodb').MongoClient;
-const mongodb_uri = process.env.MONGODB_URI;
 
-bot.onText(/\/connectdb/, (msg, match) => {
-  const chatId = msg.chat.id;
-
-  const client = new MongoClient(mongodb_uri, { useNewUrlParser: true });
-
-  client.connect((err) => {
-    if (err) {
-      bot.sendMessage(chatId, 'Error');
-    } else {
-      bot.sendMessage(chatId, 'Connected to database');
-    }
-  });
+bot.command('connectdb', (ctx) => {
+  // Connect to the database here and check if the connection was successful
+  if (successful) {
+    ctx.reply('Connected');
+  } else {
+    ctx.reply('Error');
+  }
 });
 
 
