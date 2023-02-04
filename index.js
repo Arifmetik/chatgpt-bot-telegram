@@ -48,6 +48,14 @@ if (uri && uri.startsWith('mongodb://')) {
     }
   });
 
+bot.command("ask", (ctx) => {
+ctx.reply("The /ask command works!");
+});
+
+bot.command("allow", (ctx) => {
+ctx.reply("The /allow command works!");
+});
+
   bot.command("ask", (ctx) => {
     if (db) {
       db.collection("allowed_users").findOne({ user_id: ctx.from.id.toString() }, (error, result) => {
