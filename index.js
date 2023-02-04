@@ -44,56 +44,23 @@ bot.command('uz_eng', async ctx => {
 
 
 // Test commands
+const TelegramBot = require('node-telegram-bot-api');
 const MongoClient = require('mongodb').MongoClient;
-const url = process.env.MONGO_DB_URL;
+const token = process.env.TELEGRAM_BOT_TOKEN;
+const mongodb_uri = process.env.MONGODB_URI;
+const bot = new TelegramBot(token, {polling: true});
 
-MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
+bot.onText(/\/connectdb/, (msg, match) => {
+  const chatId = msg.chat.id;
 
-  const db = client.db('mydb');
-  const allowedChats = db.collection('allowedChats');
+  const client = new MongoClient(mongodb_uri, { useNewUrlParser: true });
 
-  bot.command('allow', (ctx) => {
-    if (ctx.chat.id !== process.env.BOT_OWNER_ID) {
-      return ctx.reply('Sorry, only the bot owner can allow chat IDs.');
+  client.connect((err) => {
+    if (err) {
+      bot.sendMessage(chatId, 'Error');
+    } else {
+      bot.sendMessage(chatId, 'Connected to database');
     }
-
-    const parts = ctx.message.text.split(' ');
-    if (parts.length !== 3) {
-      return ctx.reply('Usage: /allow <id>');
-    }
-
-    const id = parseInt(parts[2], 10);
-    if (isNaN(id)) {
-      return ctx.reply('Error: Invalid ID');
-    }
-
-    allowedChats.insertOne({ chatId: id }, (insertErr) => {
-      if (insertErr) {
-        console.error(insertErr);
-        return ctx.reply('Error: Failed to save chat ID to database.');
-      }
-
-      ctx.reply(`Chat ID ${id} is now allowed to use the bot.`);
-    });
-  });
-
-  bot.command('mycommand', (ctx) => {
-    allowedChats.findOne({ chatId: ctx.chat.id }, (findErr, result) => {
-      if (findErr) {
-        console.error(findErr);
-        return ctx.reply('Error: Failed to check if chat ID is allowed.');
-      }
-
-      if (!result) {
-        return ctx.reply('Sorry, you are not allowed to use this bot.');
-      }
-
-      // Add your bot's logic here
-    });
   });
 });
 
