@@ -1,10 +1,18 @@
-const Telegraf = require("telegraf");
-
 const { MongoClient } = require('mongodb')
-const bot = new Telegraf(process.env.TG_API)
 
-const uri = process.env.MONGO_URI
-const botOwnerId = process.env.BOT_OWNER_ID
+require('dotenv').config()
+const { Configuration, OpenAIApi } = require("openai");
+const { getImage, getChat } = require("./Helper/functions");
+const { Telegraf } = require("telegraf");
+
+const configuration = new Configuration({
+  apiKey: process.env.API,
+});
+const openai = new OpenAIApi(configuration);
+module.exports = openai;
+
+const bot = new Telegraf(process.env.TG_API);
+bot.start((ctx) => ctx.reply("Welcome , You can ask anything from me"));
 
 let db
 
