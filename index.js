@@ -61,6 +61,59 @@ bot.command('retrieve', (ctx) => {
   });
 });
 
+// Test commands
+const MongoClient = require('mongodb').MongoClient;
+const url = process.env.MONGO_DB_URL;
+
+MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+
+  const db = client.db('mydb');
+  const allowedChats = db.collection('allowedChats');
+
+  bot.command('allow', (ctx) => {
+    if (ctx.chat.id !== process.env.BOT_OWNER_ID) {
+      return ctx.reply('Sorry, only the bot owner can allow chat IDs.');
+    }
+
+    const parts = ctx.message.text.split(' ');
+    if (parts.length !== 3) {
+      return ctx.reply('Usage: /allow <id>');
+    }
+
+    const id = parseInt(parts[2], 10);
+    if (isNaN(id)) {
+      return ctx.reply('Error: Invalid ID');
+    }
+
+    allowedChats.insertOne({ chatId: id }, (insertErr) => {
+      if (insertErr) {
+        console.error(insertErr);
+        return ctx.reply('Error: Failed to save chat ID to database.');
+      }
+
+      ctx.reply(`Chat ID ${id} is now allowed to use the bot.`);
+    });
+  });
+
+  bot.command('mycommand', (ctx) => {
+    allowedChats.findOne({ chatId: ctx.chat.id }, (findErr, result) => {
+      if (findErr) {
+        console.error(findErr);
+        return ctx.reply('Error: Failed to check if chat ID is allowed.');
+      }
+
+      if (!result) {
+        return ctx.reply('Sorry, you are not allowed to use this bot.');
+      }
+
+      // Add your bot's logic here
+    });
+  });
+});
 
 
 
