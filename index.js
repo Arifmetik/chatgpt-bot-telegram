@@ -1,9 +1,4 @@
-const { MongoClient } = require('mongodb');
-const mongoClient = require("mongodb").MongoClient;
-const uri = process.env.MONGODB_URI;
-const botOwnerId = process.env.BOT_OWNER_ID;
-
-require('dotenv').config();
+require('dotenv').config()
 const { Configuration, OpenAIApi } = require("openai");
 const { getImage, getChat } = require("./Helper/functions");
 const { Telegraf } = require("telegraf");
@@ -15,54 +10,43 @@ const openai = new OpenAIApi(configuration);
 module.exports = openai;
 
 const bot = new Telegraf(process.env.TG_API);
-bot.start((ctx) => ctx.reply("Welcome, you can ask anything from me."));
+bot.start((ctx) => ctx.reply("Welcome , You can ask anything from me"));
 
-if (uri && uri.startsWith('mongodb://')) {
-  let db;
+bot.help((ctx) => {
+  ctx.reply(
+    "This bot can perform the following command  \n /ask -> ank anything from me "
+  );
+});
 
-  MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, (error, client) => {
-    if (error) {
-      console.log("Error connecting to MongoDB:", error);
-    } else {
-      console.log("Successfully connected to MongoDB");
-      db = client.db("telegram-bot-db");
-    }
-  });
+// Chat command
 
-  bot.command("allow", (ctx) => {
-    if (db) {
-      if (ctx.from.id.toString() === botOwnerId) {
-        const userId = ctx.message.text.split(" ")[1].replace("/", "");
-        db.collection("allowed_users").insertOne({ user_id: userId }, (error, result) => {
-          if (error) {
-            console.log("Error adding user to allowed_users collection:", error);
-          } else {
-            ctx.reply(`User with ID ${userId} has been granted access to the /ask command.`);
-          }
-        });
-      } else {
-        ctx.reply("You are not the bot owner.");
-      }
-    } else {
-      ctx.reply("Error connecting to MongoDB, cannot perform this action.");
-    }
-  });
+bot.command("ask", async (ctx) => {
+  const text = ctx.message.text?.replace("/ask", "")?.trim().toLowerCase();
 
-  bot.command("ask", (ctx) => {
-    if (db) {
-      db.collection("allowed_users").findOne({ user_id: ctx.from.id.toString() }, (error, result) => {
-        if (error) {
-          console.log("Error searching for user in allowed_users collection:", error);
-        } else if (result) {
-          // Your logic for handling the /ask command goes here
-        } else {
-          ctx.reply("You do not have permission to use the /ask command.");
-        }
+const axios = require("axios");
+
+
+  if (text) {
+    ctx.sendChatAction("typing");
+    const res = await getChat(text);
+    if (res) {
+      ctx.telegram.sendMessage(ctx.message.chat.id, res, {
+        reply_to_message_id: ctx.message.message_id,
       });
-    } else {
-      ctx.reply("Error connecting to MongoDB, cannot perform this action.");
     }
-  });
-}
+  } else {
+    ctx.telegram.sendMessage(
+      ctx.message.chat.id,
+      "Please ask anything after /ask",
+      {
+        reply_to_message_id: ctx.message.message_id,
+      }
+    );
+  
+    //  reply("Please ask anything after /ask");
+  }
+});
+
+
 
 bot.launch();
